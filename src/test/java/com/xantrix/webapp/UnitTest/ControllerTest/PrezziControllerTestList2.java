@@ -5,14 +5,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+
 import com.xantrix.webapp.Application;
  
 
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -25,10 +27,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 @TestPropertySource(locations="classpath:application-list2.properties")
-@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = Application.class)
 @SpringBootTest
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PrezziControllerTestList2
 {
     private MockMvc mockMvc;
@@ -36,7 +37,7 @@ public class PrezziControllerTestList2
     @Autowired
 	private WebApplicationContext wac;
 
-	@Before
+	@BeforeEach
 	public void setup()
 	{
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
@@ -44,6 +45,7 @@ public class PrezziControllerTestList2
     }
     
 	@Test
+	@Order(1)
 	public void A_getList2CodArtTest() throws Exception
 	{
 		mockMvc.perform(MockMvcRequestBuilders.get("/prezzi/cerca/codice/002000301")
@@ -61,6 +63,7 @@ public class PrezziControllerTestList2
 	}
 					
 	@Test
+	@Order(2)
 	public void A_GetPrzCodArtTestList2() throws Exception
 	{
 		mockMvc.perform(MockMvcRequestBuilders.get("/prezzi/002000301")
@@ -73,6 +76,7 @@ public class PrezziControllerTestList2
 
 	//MODIFICARE LA PROPRIETA' application.listino=3
 	@Test
+	@Order(3)
 	public void B_ErrGetPrzCodArtTest() throws Exception
 	{
 		mockMvc.perform(MockMvcRequestBuilders.get("/prezzi/0020003012")
@@ -90,6 +94,7 @@ public class PrezziControllerTestList2
     		"}";
 
 	@Test
+	@Order(4)
 	public void A_testInsPrezzo() throws Exception
 	{
 		mockMvc.perform(MockMvcRequestBuilders.post("/prezzi/inserisci")
@@ -101,12 +106,13 @@ public class PrezziControllerTestList2
 	}
 
 	@Test
+	@Order(5)
 	public void E_testDelPrezzo() throws Exception
 	{
 		mockMvc.perform(MockMvcRequestBuilders.delete("/prezzi/elimina/002000301/3")
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.code").value(200))
+				.andExpect(jsonPath("$.code").value("200 OK"))
 				.andExpect(jsonPath("$.message").value("Eliminazione Prezzo Eseguita Con Successo"))
 				.andDo(print());
 	}
