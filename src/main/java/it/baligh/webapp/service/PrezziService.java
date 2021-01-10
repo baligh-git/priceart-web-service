@@ -1,0 +1,13 @@
+package it.baligh.webapp.service;
+
+import it.baligh.webapp.entities.DettListini;
+ 
+public interface PrezziService
+{
+	public DettListini SelPrezzo(String CodArt, String Listino);
+
+	public void InsPrezzo(DettListini dettListini);
+
+	public void DelPrezzo(String CodArt, String IdList);
+
+}
